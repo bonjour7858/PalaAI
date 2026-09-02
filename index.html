@@ -1,101 +1,29 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Paladium Wiki - Assistant IA</title>
-  <link rel="stylesheet" href="style.css">
-  <!-- SDK Supabase -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-</head>
-<body>
+<div id="chat-widget-wrapper">
+  <!-- Bouton flottant -->
+  <button id="chat-toggle-btn" aria-label="Ouvrir le chat">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 21 1.9-5.7a8.5 8.5 0 1 1 3.8 3.8z"/></svg>
+  </button>
 
-  <header class="navbar">
-    <div class="logo">PALADIUM<span>WIKI</span></div>
-    <p class="subtitle">Pose toutes tes questions à l'assistant intelligent du serveur !</p>
-  </header>
-
-  <main class="container">
-    <div class="hero">
-      <h1>Bienvenue sur l'assistant Paladium</h1>
-      <p>Clique sur la bulle de chat en bas à droite pour poser ta question sur le jeu, les crafts, les factions ou les règles.</p>
+  <div id="chat-window" class="chat-hidden">
+    <div class="chat-header">
+      <div class="chat-title-wrapper">
+        <span class="chat-status-dot"></span>
+        <h3>Assistant Paladium</h3>
+      </div>
+      <button id="chat-close-btn" aria-label="Fermer le chat">&times;</button>
     </div>
-  </main>
 
-  <div class="chat-widget">
-    <button id="chatToggleBtn" class="chat-toggle" onclick="toggleChat()" title="Ouvrir le chat">💬</button>
+    <div id="chat-messages">
+      <div class="message bot-message">
+        Salut ! Je suis l'assistant du wiki Paladium. Pose-moi ta question sur les items, les métiers ou les règles du serveur ! 🚀
+      </div>
+    </div>
 
-    <div id="chatBox" class="chat-box hidden">
-      <div class="chat-header">
-        <span>Assistant Paladium</span>
-        <button class="close-btn" onclick="toggleChat()">✕</button>
-      </div>
-      
-      <div class="chat-messages" id="messages">
-        <div class="msg bot">Salut ! Je connais tout du wiki Paladium. Que veux-tu savoir ?</div>
-      </div>
-
-      <div class="chat-input-area">
-        <input type="text" id="userInput" placeholder="Ex: Comment faire un marteau..." onkeypress="handleKeyPress(event)" />
-        <button onclick="askAI()">➤</button>
-      </div>
+    <div class="chat-input-area">
+      <input type="text" id="chat-input" placeholder="Pose ta question ici..." autocomplete="off" />
+      <button id="chat-send-btn" aria-label="Envoyer">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+      </button>
     </div>
   </div>
-
-  <script>
-    const SUPABASE_URL = "https://yycogkohysuohxuadvfn.supabase.co";
-    const SUPABASE_ANON_KEY = "sb_publishable_5VxlBTIc1Oo9b668cNvNww_HXZp_Xv4"; 
-
-    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-    function toggleChat() {
-      const chatBox = document.getElementById('chatBox');
-      chatBox.classList.toggle('hidden');
-      if (!chatBox.classList.contains('hidden')) {
-        document.getElementById('userInput').focus();
-      }
-    }
-
-    function handleKeyPress(e) {
-      if (e.key === 'Enter') {
-        askAI();
-      }
-    }
-
-    async function askAI() {
-      const input = document.getElementById('userInput');
-      const question = input.value.trim();
-      if (!question) return;
-
-      appendMessage(question, 'user');
-      input.value = '';
-
-      const loadingMsg = appendMessage("Recherche dans le wiki...", 'bot');
-
-      try {
-        const { data, error } = await supabaseClient.functions.invoke('chat', {
-          body: { question }
-        });
-
-        if (error) throw error;
-
-        loadingMsg.innerText = data.reply;
-
-      } catch (err) {
-        console.error("Erreur:", err);
-        loadingMsg.innerText = "Désolé, une erreur est survenue lors de la réponse.";
-      }
-    }
-
-    function appendMessage(text, type) {
-      const container = document.getElementById('messages');
-      const msgDiv = document.createElement('div');
-      msgDiv.className = `msg ${type}`;
-      msgDiv.innerText = text;
-      container.appendChild(msgDiv);
-      container.scrollTop = container.scrollHeight;
-      return msgDiv;
-    }
-  </script>
-</body>
-</html>
+</div>
