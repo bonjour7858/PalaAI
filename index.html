@@ -1,29 +1,65 @@
-<div id="chat-widget-wrapper">
-  <!-- Bouton flottant -->
-  <button id="chat-toggle-btn" aria-label="Ouvrir le chat">
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 21 1.9-5.7a8.5 8.5 0 1 1 3.8 3.8z"/></svg>
-  </button>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wiki Paladium - Assistant IA</title>
+  <!-- Lien vers le fichier CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
-  <div id="chat-window" class="chat-hidden">
-    <div class="chat-header">
-      <div class="chat-title-wrapper">
-        <span class="chat-status-dot"></span>
-        <h3>Assistant Paladium</h3>
+  <!-- Contenu principal de ta page (exemple) -->
+  <main class="main-content">
+    <h1>Bienvenue sur le Wiki Paladium</h1>
+    <p>Utilise l'assistant en bas à droite pour poser toutes tes questions sur le serveur !</p>
+  </main>
+
+  <!-- WIDGET DE CHAT EMBARQUÉ -->
+  <div id="chat-widget-wrapper">
+    <!-- Fenêtre de chat (cachée par défaut) -->
+    <div id="chat-window" class="chat-hidden">
+      <div class="chat-header">
+        <div class="chat-title-wrapper">
+          <span class="chat-status-dot"></span>
+          <h3>Assistant Paladium</h3>
+        </div>
+        <button id="chat-close-btn" aria-label="Fermer">&times;</button>
       </div>
-      <button id="chat-close-btn" aria-label="Fermer le chat">&times;</button>
-    </div>
 
-    <div id="chat-messages">
-      <div class="message bot-message">
-        Salut ! Je suis l'assistant du wiki Paladium. Pose-moi ta question sur les items, les métiers ou les règles du serveur ! 🚀
+      <div id="chat-messages">
+        <div class="message bot-message">
+          Salut ! 👋 Pose-moi n'importe quelle question sur le wiki Paladium (items, métiers, machines...).
+        </div>
+      </div>
+
+      <div class="chat-input-area">
+        <input type="text" id="chat-input" placeholder="Écris ta question..." autocomplete="off" />
+        <button id="chat-send-btn" aria-label="Envoyer">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+        </button>
       </div>
     </div>
 
-    <div class="chat-input-area">
-      <input type="text" id="chat-input" placeholder="Pose ta question ici..." autocomplete="off" />
-      <button id="chat-send-btn" aria-label="Envoyer">
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-      </button>
-    </div>
+    <!-- Bouton flottant -->
+    <button id="chat-toggle-btn" aria-label="Ouvrir le chat">
+      <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 21 1.9-5.7a8.5 8.5 0 1 1 3.8 3.8z"/></svg>
+    </button>
   </div>
-</div>
+
+  <!-- Script minimal pour l'ouverture/fermeture -->
+  <script>
+    const toggleBtn = document.getElementById('chat-toggle-btn');
+    const closeBtn = document.getElementById('chat-close-btn');
+    const chatWindow = document.getElementById('chat-window');
+
+    toggleBtn.addEventListener('click', () => {
+      chatWindow.classList.toggle('chat-hidden');
+    });
+
+    closeBtn.addEventListener('click', () => {
+      chatWindow.classList.add('chat-hidden');
+    });
+  </script>
+</body>
+</html>
