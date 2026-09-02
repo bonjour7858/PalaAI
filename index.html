@@ -9,7 +9,6 @@
 <body>
 
   <div class="app-container">
-    <!-- Barre latérale (Sidebar) -->
     <aside class="sidebar">
       <div class="sidebar-top">
         <button class="icon-btn" title="Nouvelle discussion" id="new-chat-btn">
@@ -25,7 +24,6 @@
       </div>
     </aside>
 
-    <!-- Zone principale -->
     <main class="main-container">
       
       <!-- Écran d'accueil initial -->
@@ -65,12 +63,11 @@
     </main>
   </div>
 
-  <!-- Script de liaison Supabase -->
   <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
     const SUPABASE_URL = 'https://yycogkohysuohxuadvfn.supabase.co';
-    const SUPABASE_ANON_KEY = 'TA_CLE_ANON_ICI'; // Remplace par ta clé publique anon
+    const SUPABASE_ANON_KEY = 'sb_publishable_5VxlBTIc1Oo9b668cNvNww_HXZp_Xv4'; 
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     const welcomeView = document.getElementById('welcome-view');
@@ -84,7 +81,6 @@
     async function handleUserMessage(text) {
       if (!text.trim()) return;
 
-      // Basculer l'affichage vers l'interface de chat si on est sur la page d'accueil
       if (!chatView.classList.contains('hidden') === false) {
         welcomeView.classList.add('hidden');
         chatView.classList.remove('hidden');
