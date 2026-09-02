@@ -1,24 +1,25 @@
 name: Scraping du Wiki
 
 on:
-  workflow_dispatch:
+  workflow_dispatch: # Permet de lancer le script manuellement depuis l'onglet Actions
 
 jobs:
   scrape:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Récupérer le code
+      - name: Récupérer le code du dépôt
         uses: actions/checkout@v4
 
-      - name: Configurer Node.js
+      - name: Configurer Node.js 20
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: '20'
 
       - name: Installer les dépendances
         run: npm install
 
-      - name: Exécuter le scraping
+      - name: Lancer le script de scraping
         run: node scripts/scrape.js
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
