@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paladium Wiki & Guide</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="logo">PALADIUM<span>WIKI</span></div>
+    <nav>
+      <a href="#">Accueil</a>
+      <a href="#">Guides</a>
+      <a href="#">Factions</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <h1>Bienvenue sur le Wiki Paladium AI</h1>
+      <p>Utilise le bouton de chat en bas à droite pour poser toutes tes questions sur le jeu !</p>
+    </section>
+
+    <section class="grid">
+      <div class="card">
+        <h3>⚔️ Débuter sur Paladium</h3>
+        <p>Minerais, métiers et équipements de base.</p>
+      </div>
+      <div class="card">
+        <h3>🏰 Factions & Claims</h3>
+        <p>Règles de territoires et gestion de faction.</p>
+      </div>
+      <div class="card">
+        <h3>✨ Enchants & Lucky Blocks</h3>
+        <p>Fonctionnement du stuff moddé et probabilités.</p>
+      </div>
+    </section>
+  </main>
+
+  <div class="chat-widget">
+    <button id="chatToggleBtn" class="chat-toggle" onclick="toggleChat()">💬</button>
+
+    <div id="chatBox" class="chat-box hidden">
+      <div class="chat-header">
+        <span>Assistant Wiki Paladium</span>
+        <button class="close-btn" onclick="toggleChat()">✕</button>
+      </div>
+      <div class="chat-messages" id="messages">
+        <div class="msg bot">Salut ! Une question sur Paladium ? Pose-la moi ici !</div>
+      </div>
+      <div class="chat-input-area">
+        <input type="text" id="userInput" placeholder="Pose une question..." onkeypress="handleKeyPress(event)" />
+        <button onclick="askAI()">▶</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const SUPABASE_URL = "TA_SUPABASE_URL";
+    const SUPABASE_ANON_KEY = "TA_SUPABASE_ANON_KEY";
+    const GROQ_KEY = "TA_CLE_GROQ";
+
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    function toggleChat() {
+      document.getElementById('chatBox').classList.toggle('hidden');
+    }
+
+    function handleKeyPress(e) {
+      if (e.key === 'Enter') askAI();
+    }
+
+    async function askAI() {
+      const input = document.getElementById('userInput');
+      const question = input.value.trim();
+      if (!question) return;
+
+      appendMessage(question, 'user');
+      input.value = '';
+
+      const loadingMsg = appendMessage("Recherche dans le wiki...", 'bot');
+
+      try {
+        let { data: docs } = await supabaseClient.rpc('search_documents', {
+          query_text: question
+        });
+
+        if (!docs || docs.length === 0) {
+          const res = await supabaseClient.from('documents').select('content').limit(3);
+          docs = res.data;
+        }
+
+        const context = docs && docs.length > 0 
+          ? docs.map(d => d.content).join("\n---\n")
+          : "Aucune information trouvée.";
+
+        const chatRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+          method: 'POST',
+          headers: { 
+            'Authorization': `Bearer ${GROQ_KEY}`, 
+            'Content-Type': 'application/json' 
+          },
+          body: JSON.stringify({
+            model: 'llama-3.3-70b-versatile',
+            messages: [
+              { role: 'system', content: `Tu es l'assistant du serveur Paladium. Réponds précisément à l'utilisateur en utilisant uniquement ces extraits du wiki :\n${context}` },
+              { role: 'user', content: question }
+            ],
+            temperature: 0.3
+          })
+        });
+
+        const chatData = await chatRes.json();
+        loadingMsg.innerText = chatData.choices[0].message.content;
+
+      } catch (err) {
+        console.error(err);
+        loadingMsg.innerText = "Erreur de connexion.";
+      }
+    }
+
+    function appendMessage(text, type) {
+      const container = document.getElementById('messages');
+      const msgDiv = document.createElement('div');
+      msgDiv.className = `msg ${type}`;
+      msgDiv.innerText = text;
+      container.appendChild(msgDiv);
+      container.scrollTop = container.scrollHeight;
+      return msgDiv;
+    }
+  </script>
+</body>
+</html>
