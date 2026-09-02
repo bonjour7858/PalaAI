@@ -1,9 +1,16 @@
 {
-  "name": "paladium-wiki-ai",
+  "name": "pala-wiki-scraper",
   "version": "1.0.0",
+  "description": "Scraper pour le wiki Paladium",
+  "main": "scripts/scrape.js",
   "type": "module",
+  "scripts": {
+    "scrape": "node scripts/scrape.js"
+  },
   "dependencies": {
-    "@supabase/supabase-js": "^2.45.0",
-    "cheerio": "^1.0.0-rc.12"
+    "@supabase/supabase-js": "^2.39.0",
+    "cheerio": "^1.0.0-rc.12",
+    "node-fetch": "^3.3.2",
+    "ws": "^8.16.0"
   }
 }
